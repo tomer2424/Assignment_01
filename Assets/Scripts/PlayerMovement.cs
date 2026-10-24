@@ -1,0 +1,80 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class PlayerMovement : MonoBehaviour
+{
+    private Rigidbody2D rb;
+
+    [SerializeField] private float moveSpeed = 8.0f;
+    private Vector2 movementVector;
+    private bool facingRight = true;
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    void Update()
+    {
+        Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -10.0f);
+
+        HandleInput();
+
+        movementVector.x = GetHorizontalAxis();
+        movementVector.y = GetVerticalAxis();
+
+        if (movementVector.sqrMagnitude > 1.0f)
+        {
+            movementVector.Normalize();
+        }
+    }
+
+    private void FixedUpdate()
+    {   
+        rb.MovePosition(rb.position + movementVector * moveSpeed * Time.fixedDeltaTime);
+    }
+
+    private float GetHorizontalAxis()
+    {
+        bool right = Keyboard.current.dKey.isPressed;
+        bool left = Keyboard.current.aKey.isPressed;
+        
+        if (left == right)
+        {
+            return 0f;
+        }
+
+        return (right ? 1.0f : -1.0f);
+    }
+
+    private float GetVerticalAxis()
+    {
+        bool up = Keyboard.current.wKey.isPressed;
+        bool down = Keyboard.current.sKey.isPressed;
+
+        if (up == down)
+        {
+            return 0f;
+        }
+
+        return (up ? 1.0f : -1.0f);
+    }
+
+    private void HandleInput()
+    {
+        if (Keyboard.current.dKey.isPressed && !facingRight)
+        {
+            Flip();
+        }
+        else if (Keyboard.current.aKey.isPressed && facingRight)
+        {
+            Flip();
+        }
+    }
+
+    private void Flip()
+    {
+        facingRight = !facingRight;
+        gameObject.transform.Rotate(0f, 180.0f, 0f);
+    }
+} 
