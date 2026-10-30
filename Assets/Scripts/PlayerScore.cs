@@ -4,6 +4,7 @@ using UnityEngine.SocialPlatforms.Impl;
 public class PlayerScore : MonoBehaviour
 {
     [SerializeField] private GameManager gameManager;
+    [SerializeField] private Coin coinScript;
 
     private int playerScore;
     [SerializeField] int winCondition = 1000;
@@ -11,15 +12,9 @@ public class PlayerScore : MonoBehaviour
     private int coinsLeft = 5;
 
     private string enemyTag = "Enemy";
-    private string yellowCoinTag = "Yellow_Coin";
-    private string greenCoinTag = "Green_Coin";
-    private string blueCoinTag = "Blue_Coin";
+    private string coinTag = "Coin";
 
-    private int yellowCoinScore = 50;
-    private int greenCoinScore = 20;
-    private int blueCoinScore = 10;
-
-    private void Start()
+    private void Awake()
     {
         playerScore = 0;
     }
@@ -36,7 +31,7 @@ public class PlayerScore : MonoBehaviour
     public void AddScore(int score)
     {
         playerScore += score;
-        Debug.Log("Score: " + playerScore);
+        Debug.Log("Score: " + playerScore + "/" + winCondition);
 
         if (playerScore >= winCondition)
         {
@@ -51,22 +46,10 @@ public class PlayerScore : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag(yellowCoinTag))
+        if (collision.CompareTag(coinTag))
         {
             Destroy(collision.gameObject);
-            AddScore(yellowCoinScore);
-            coinsLeft--;
-        }
-        else if (collision.CompareTag(greenCoinTag))
-        {
-            Destroy(collision.gameObject);
-            AddScore(greenCoinScore);
-            coinsLeft--;
-        }
-        else if (collision.CompareTag(blueCoinTag))
-        {
-            Destroy(collision.gameObject);
-            AddScore(blueCoinScore);
+            AddScore(coinScript.getValue());
             coinsLeft--;
         }
     }
@@ -76,7 +59,7 @@ public class PlayerScore : MonoBehaviour
         if (collision.gameObject.CompareTag(enemyTag))
         {
             Debug.Log("you lose");
-            this.GetComponent<PlayerMovement>().enabled = false;
+            gameObject.GetComponent<PlayerMovement>().enabled = false;
         }
     }
 }

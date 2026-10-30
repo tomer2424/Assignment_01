@@ -9,17 +9,25 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 movementVector;
     private bool facingRight = true;
 
-    private void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
-        Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -10.0f);
+        HandleCamera();
+        HandleMovement();
+        HandleFlip();
+    }
 
-        HandleInput();
+    private void FixedUpdate()
+    {   
+        rb.MovePosition(rb.position + movementVector * moveSpeed * Time.fixedDeltaTime);
+    }
 
+    private void HandleMovement()
+    {
         movementVector.x = GetHorizontalAxis();
         movementVector.y = GetVerticalAxis();
 
@@ -27,11 +35,6 @@ public class PlayerMovement : MonoBehaviour
         {
             movementVector.Normalize();
         }
-    }
-
-    private void FixedUpdate()
-    {   
-        rb.MovePosition(rb.position + movementVector * moveSpeed * Time.fixedDeltaTime);
     }
 
     private float GetHorizontalAxis()
@@ -60,7 +63,7 @@ public class PlayerMovement : MonoBehaviour
         return (up ? 1.0f : -1.0f);
     }
 
-    private void HandleInput()
+    private void HandleFlip()
     {
         if (Keyboard.current.dKey.isPressed && !facingRight)
         {
@@ -71,10 +74,14 @@ public class PlayerMovement : MonoBehaviour
             Flip();
         }
     }
-
     private void Flip()
     {
         facingRight = !facingRight;
         gameObject.transform.Rotate(0f, 180.0f, 0f);
+    }
+
+    private void HandleCamera()
+    {
+        Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -10.0f);
     }
 } 

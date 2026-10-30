@@ -5,10 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - Wall
-  - Yellow_Coin
-  - Green_Coin
-  - Blue_Coin
   - Enemy
+  - Coin
+  - Green_Coin
   layers:
   - Default
   - TransparentFX

@@ -1,6 +1,4 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class EnemyMovement : MonoBehaviour
 {
@@ -9,10 +7,9 @@ public class EnemyMovement : MonoBehaviour
 
     [SerializeField] private float moveSpeed = 5.0f;
     private bool facingRight = true;
+    private float lastXPos;
 
-    [SerializeField] private float lastXPos;
-
-    void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }

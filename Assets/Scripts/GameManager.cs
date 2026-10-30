@@ -3,12 +3,20 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private GameObject yellow_Coin;
-    [SerializeField] private GameObject green_Coin;
-    [SerializeField] private GameObject blue_Coin;
+    [SerializeField] private GameObject coinPrefab;
 
-    [SerializeField] private Vector2 xRange = new Vector2(-9f, 9f);
-    [SerializeField] private Vector2 yRange = new Vector2(-5f, 5f);
+    [SerializeField] private int coinSpawnAmount;
+
+    [SerializeField] private Color coinColor_1;
+    [SerializeField] private Color coinColor_2;
+    [SerializeField] private Color coinColor_3;
+
+    [SerializeField] private int coinValue_1;
+    [SerializeField] private int coinValue_2;
+    [SerializeField] private int coinValue_3;
+
+    [SerializeField] private float xRange = 9f;
+    [SerializeField] private float yRange = 5f;
 
     void Start()
     {
@@ -17,23 +25,33 @@ public class GameManager : MonoBehaviour
 
     public void GenerateCoins()
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < coinSpawnAmount; i++)
         {
-            int coin = Random.Range(0, 3);
-            Vector2 location = new Vector2(Random.Range(xRange.x, xRange.y), Random.Range(yRange.x, yRange.y));
+            int coinType = Random.Range(0, 3);
+            Vector2 location = new Vector2(Random.Range(-xRange, xRange), Random.Range(-yRange, yRange));
 
-            switch (coin)
+            Color selectedColor = Color.white;
+            int selectedValue = 0;
+
+            switch (coinType)
             {
                 case 0:
-                    Instantiate(yellow_Coin, location, Quaternion.identity);
+                    selectedColor = coinColor_1;
+                    selectedValue = coinValue_1;
                     break;
                 case 1:
-                    Instantiate(green_Coin, location, Quaternion.identity);
+                    selectedColor = coinColor_2;
+                    selectedValue = coinValue_2;
                     break;
                 case 2:
-                    Instantiate(blue_Coin, location, Quaternion.identity);
+                    selectedColor = coinColor_3;
+                    selectedValue = coinValue_3;
                     break;
             }
+
+            GameObject newCoin = Instantiate(coinPrefab, location, Quaternion.identity);
+            newCoin.GetComponent<SpriteRenderer>().color = selectedColor;
+            newCoin.GetComponent<Coin>().setValue(selectedValue);
         }
     }
 }
